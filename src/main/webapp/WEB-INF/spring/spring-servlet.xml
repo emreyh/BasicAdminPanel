@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.2.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.infonal" />
+	<mvc:annotation-driven />
+	<mvc:resources location="/resources/" mapping="/resources/**" />
+
+	<!-- mongo configuration -->
+	<mongo:repositories base-package="com.infonal.dao" />
+	<mongo:mongo id="mongo" host="${database.host}" port="${database.port}" />
+	<mongo:db-factory id="mongoDbFactory" host="${database.host}"
+		port="${database.port}" dbname="${database.name}" mongo-ref="mongo" />
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+		<constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+
+	<!-- AOP -->
+	<aop:aspectj-autoproxy />
+	<bean id="logAspect" class="com.infonal.aspect.LoggerAspect" />
+
+
+	<!-- db-properties/database.properties config file -->
+	<bean id="dbProps"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="/WEB-INF/db-properties/database.properties" />
+	</bean>
+
+	<!-- View Resolver config -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.tiles3.TilesViewResolver">
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer">
+		<property name="definitions">
+			<list>
+				<value>/WEB-INF/tiles3/layouts.xml</value>
+				<value>/WEB-INF/tiles3/views.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- ReCaptcha Bean -->
+	<bean id="reCaptchaService" class="net.tanesha.recaptcha.ReCaptchaImpl">
+		<property name="privateKey" value="6LehUwcTAAAAAE8TIZFBYq8OIIKis4VGEryNT7T3"></property>
+	</bean>
+</beans>
