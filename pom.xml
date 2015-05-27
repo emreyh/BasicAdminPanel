@@ -13,7 +13,7 @@
 		<mongo.java.version>2.11.4</mongo.java.version>
 		<tiles.version>3.0.5</tiles.version>
 		<org.codehaus.version>1.9.8</org.codehaus.version>
-		<org.spring-data-commons.version>1.5.0.RELEASE</org.spring-data-commons.version>
+		<org.spring-data-commons.version>1.6.5.RELEASE</org.spring-data-commons.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<dependencies>

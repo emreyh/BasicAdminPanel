@@ -30,13 +30,10 @@ $(document).ready(function() {
                 }
             }, 
             phoneNumber: {
-                validators: {
-                    notEmpty: {
-                        message: 'Please enter a valid phone number'
-                    },
+                validators:{
                     regexp:{
                     	regexp: /[(]\d{3}[)]\s\d{3}-\d{4}/,
-                    	message: 'The Phone Number can consist of numbers'
+                    	message: 'The phone number is incorrect'
                     }
                 }
             }
@@ -172,12 +169,9 @@ $(document).ready(function() {
             }, 
             phoneNumber: {
                 validators: {
-                    notEmpty: {
-                        message: 'Please enter a valid phone number'
-                    },
                     regexp:{
                     	regexp: /[(]\d{3}[)]\s\d{3}-\d{4}/,
-                    	message: 'The Phone Number can consist of numbers'
+                    	message: 'The phone number is incorrect'
                     }
                 }
             }

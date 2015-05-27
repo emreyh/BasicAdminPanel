@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -48,11 +51,11 @@ public class UserRepositoryImpl implements UserRepository {
 	}
 
 	@Override
-	public List<User> getUsersByPagination(int page) {
+	public List<User> getUsersByPagination(int page, int addedUserSize) {
 		Query query = new Query();
 		query.limit(LIMIT);
-		query.skip((page - 1) * SKIP);
-
+		query.with(new Sort(new Order(Direction.DESC, "joindate")));
+		query.skip((page - 1) * SKIP + addedUserSize);
 		return mongo.find(query, User.class);
 	}
 

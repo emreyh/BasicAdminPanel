@@ -18,7 +18,7 @@ public interface UserRepository {
 
 	public User getUser(String userId);
 	
-	public List<User> getUsersByPagination(int page);
+	public List<User> getUsersByPagination(int page, int addedUserSize);
 	
 	public Long getCount();
 	

@@ -1,18 +1,23 @@
 package com.infonal.web;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+
 import net.tanesha.recaptcha.ReCaptcha;
 import net.tanesha.recaptcha.ReCaptchaResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.infonal.model.User;
 import com.infonal.service.UserService;
 
@@ -27,12 +32,16 @@ public class UserController {
 
 	// page number for the pagination
 	private int pageNumber = 1;
+	
+	// number of users that are added during the session.
+	private int addedUserSize = 0;
 
 	// index page
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String getAllUsers(ModelMap model) {
 		pageNumber = 1;
-		model.addAttribute("users", userService.getUsersByPagination(pageNumber));
+		addedUserSize = 0;
+		model.addAttribute("users", userService.getUsersByPagination(pageNumber, addedUserSize));
 		model.addAttribute("isEnough",userService.getCount() >= 12 ? true : false);
 		return "index";
 	}
@@ -41,7 +50,7 @@ public class UserController {
 	public @ResponseBody Map<String, Object> getUsersByPageNumber() {
 		pageNumber++;
 		// get users from database
-		List<User> users = userService.getUsersByPagination(pageNumber);
+		List<User> users = userService.getUsersByPagination(pageNumber, addedUserSize);
 
 		// prepare ajax response
 		Map<String, Object> response = new HashMap<String, Object>();
@@ -80,11 +89,12 @@ public class UserController {
 		String remoteAddr = request.getRemoteAddr();
 		ReCaptchaResponse reCaptchaResponse = reCaptchaService.checkAnswer(remoteAddr, challenge, respCaptcha);
 
-		User user = new User(name, lastName, phoneNumber);
+		User user = new User(name, lastName, phoneNumber, new Date());
 
 		if (reCaptchaResponse.isValid()) {
 			userService.addUser(user); // added user to database
 			if (user.getId() != null) {
+				addedUserSize++;
 				response.put("valid", true);
 				response.put("user", user);
 			} else {

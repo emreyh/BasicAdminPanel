@@ -1,6 +1,7 @@
 package com.infonal.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -17,15 +18,19 @@ public class User implements Serializable {
 	private String lastName;
 	@Field(value = "phone")
 	private String phoneNumber;
+	@Field(value = "joindate")
+	private Date joinDate;
+	
 
 	public User() {
 	}
 
-	public User(String name, String lastName, String phoneNumber) {
+	public User(String name, String lastName, String phoneNumber, Date joinDate) {
 		super();
 		this.name = name;
 		this.lastName = lastName;
 		this.phoneNumber = phoneNumber;
+		this.joinDate = joinDate;
 	}
 
 	public String getId() {
@@ -63,6 +68,6 @@ public class User implements Serializable {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", lastName=" + lastName
-				+ ", phoneNumber=" + phoneNumber + "]";
+				+ ", phoneNumber=" + phoneNumber + ", joinDate" + joinDate + "]";
 	}
 }
